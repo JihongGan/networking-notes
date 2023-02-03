@@ -35,8 +35,8 @@ Notes on computer networking.
   * What does it take to build a social networking protocol?
 
 ## References
-* [KR] *Computer Networking: A Top-Down Approach, 8th Edition*, Kurose and Ross, 2020.
-* [PD] *Computer Networks: A Systems Approach, 6th Edition*, Peterson and Davie, 2021.
+* [KR20] *Computer Networking: A Top-Down Approach, 8th Edition*, Kurose and Ross, 2020.
+* [PD21] *Computer Networks: A Systems Approach, 6th Edition*, Peterson and Davie, 2021.
 
 # Computer Networks and the internet
 ![](figures/2023-01-12-17-30-31.png)
@@ -153,3 +153,64 @@ Notes on computer networking.
   * both only implement the bottom layers
   * Routers implement the network layer but link-layer switches do not
 * At each layer, a packet has two types of fields: header fields and a **payload field**. The payload is typically a packet from the layer above.
+
+# Application Layer
+
+## Principles of Network Applications
+* Architectures
+  * **Client-server**
+    * Eg. the Web, email
+    * Hosts do not communicate with each other
+  * **Peer-to-peer**
+    * Eg. BitTorrent, Skype
+    * Hosts communicate to each other with no servers involved
+* In either architecture, an application consists of *pairs of processes* that send *messages* to each other over a network.
+  * By convention, the process that initiates the communication is called the **client** and the other process is called the **server**.
+    * Eg. In the Web, Web browser (client) initiates the communication with the Web server.
+    * Eg. In p2p, each process is both client and server.
+* Processes interacts with the network via **sockets**, the interface between application layer and transport layer.
+  * A socket is identified by a pair of IP address and port number.
+
+## The Web and HTTP
+
+### Overview
+* The Web is a client-server app that uses HTTP as its application-layer protocol.
+  Client and server processes talk to each other via HTTP messages.
+* A **web page** consists of objects, files like HTML files and images.
+  A web page usually consists of a **base HTML file** which references other objects via URLs.
+  **Web browsers** implement the client side of HTTP.
+* HTTP is built on top of TCP
+* HTTP is a **stateless** protocol. HTTP servers store no information about clients.
+
+### Non-Persistent vs. Persistent Connections
+* Internet app developers must decide should each request/response pair be a separate TCP connection 
+  or should all messages be sent over a single TCP connection.
+  The former is called **non-persistent connection** and the latter is called **persistent connection**.
+  HTTP can be used in both ways.
+* Non-persistent HTTP sets up a TCP connection for exactly one request message and response pair.
+  So retrieving a web page with 10 objects requires 10 TCP connections, which is a big overhead.
+* Each TCP connection takes 2RTT due to three-way handshake,
+  one RTT to establish the connection and one RTT for messaging,
+  another big overhead.
+* With HTTP/1.1 persistent connection, server leaves the connection open after responding.
+  Multiple web pages can be retrieved over the same connection.
+  The default mode HTTP uses persistent connection with pipelining.
+
+## Domain Name System DNS
+* What
+  * A distributed database implemented in a hierarchy of **DNS servers**.
+  * An application-layer protocol that allows hosts to query the database.
+* Services
+  * Translate domain names to IP addresses
+  * Host aliasing
+  * Load distribution
+* How DNS works
+  * All DNS messages are sent over UDP port 53
+  * A hierarchy of servers
+    * Root DNS servers provide the IP address of the top-level domain (TLD) servers
+    * TLD servers (eg. .com, .edu, .org) provide the IP address of the authoritative DNS servers
+    * Authoritative DNS servers provide the IP address of the publicly accessible hosts
+  * Local DNS servers
+    * Forwards DNS queries to the DNS servers hierarchy
+    * Cache the results of previous queries
+  * DNS queries can be iterative or recursive
