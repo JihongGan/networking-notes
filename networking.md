@@ -196,6 +196,36 @@ Notes on computer networking.
   Multiple web pages can be retrieved over the same connection.
   The default mode HTTP uses persistent connection with pipelining.
 
+### HTTP message format
+* Request
+  ![](figures/2023-02-06-16-08-59.png)
+* Response
+  ![](figures/2023-02-06-16-24-47.png)
+
+### Cookies
+* Allows web sites to identify users.
+  Creates a user session on top of stateless HTTP.
+  ![](figures/2023-02-06-16-37-28.png)
+
+### Web Caching
+* A Web cache—also called a proxy server—is a network entity that satisfies HTTP requests on the behalf of an origin Web server. The Web cache has its own disk storage and keeps copies of recently requested objects in this storage.
+* Benefits
+  1. Shorten response time
+  2. Reducing traffic on an institution's access link to the Internet.
+     Reducing web traffic in the Internet as a whole.
+     Localizing traffic
+* Eg. CDNs Content distribution networks
+* Handle potentially stale objects with conditional GETs
+
+### HTTP/2
+* Problem with HTTP/1.1
+  * Sending all objects through a persistent TCP connection causes **Head of Line (HOL) blocking**: larger objects in an HTML page blocks the rest.
+  * Clients motivated to open parallel TCP connections for the same web page to gain an unfair share of the bandwidth.
+* HTTP/2 solutions
+  * Banning parallel TCP connections for a single webpage
+  * Breaking the HTTP message into smaller chunks called **frames**.
+    Multiplexing (time-sharing) the connection among frames.
+
 ## Domain Name System DNS
 * What
   * A distributed database implemented in a hierarchy of **DNS servers**.
